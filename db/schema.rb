@@ -13,10 +13,17 @@
 ActiveRecord::Schema.define(version: 3) do
 
   create_table "patients", force: :cascade do |t|
+    t.string "username"
     t.string "chosen_name"
     t.string "location"
     t.string "phone_number"
     t.string "email"
+    t.string "gender_id"
+    t.string "sexual_id"
+    t.string "sex_at_birth"
+    t.string "race"
+    t.string "age"
+    t.string "insurance"
   end
 
   create_table "sessions", force: :cascade do |t|
@@ -27,10 +34,24 @@ ActiveRecord::Schema.define(version: 3) do
   end
 
   create_table "therapists", force: :cascade do |t|
+    t.string "username"
     t.string "chosen_name"
     t.string "location"
     t.string "phone_number"
     t.string "email"
+    t.string "gender_id"
+    t.string "sexual_id"
+    t.string "sex_at_birth"
+    t.string "race"
+    t.integer "age"
+    t.boolean "lcpc"
+    t.boolean "lcp"
+    t.boolean "lmhc"
+    t.boolean "mft"
+    t.boolean "lcsw"
+    t.boolean "cmhimp"
+    t.string "education"
+    t.string "insurance"
   end
 
 end
