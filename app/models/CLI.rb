@@ -50,21 +50,24 @@ class CLI
     def patient_home 
 
         clear_screen
-        puts "Hi #{@current_user.username}, you have #{@current_user.sessions.count} completed sessions"
+        puts "Hi #{@current_user.username}, you have #{get_completed_sessions.count} completed sessions"
         divider
 
         puts "Select from the choices below:"
-        puts "1) Find a Therapist"
-        puts "2) Manage Appointments"
+        puts "F) Find a Therapist"
+        puts "M) Manage Appointments"
+        puts "S) Settings"
         puts "\n~~ (Q)uit or (R)estart ~~"
         
         choice = get_user_input.upcase
     
         case choice
-        when "1"
+        when "F"
             find_therapists
-        when "2"
-          #playing_now
+        when "M"
+            manage_appointments
+        when "S"
+            settings
         when "R" || "RESTART"
           run
         when "Q" || "QUIT"
@@ -73,9 +76,74 @@ class CLI
         end
     end
 
-    def book_appointment
-        #Session.new
+    def settings
+        puts "What would you like to do?"
+        puts "1) Set a default therapist"
+        choice = get_user_input
+        case choice
+        when "1"
+            chose_a_regular_therapist
+        else
+            incorrect_selection
+        end
     end
+
+    def manage_appointments
+        puts "What would you like to do?"
+        puts "B) Book an appointment"
+        puts "V) View my sessions"
+        choice = get_user_input.upcase
+        case choice
+        when 'B'
+            book_an_appointment
+        when 'V'
+            get_sessions
+            puts 'Where to now?'
+            puts 'H) Home'
+            puts 'M) Manage Appointments'
+            entered_info = get_user_input.upcase
+            case entered_info
+            when 'H'
+                patient_home
+            when 'M'
+                manage_appointments
+            else
+                incorrect_selection
+            end
+        else
+            incorrect_selection
+        end
+    end
+
+    def book_an_appointment
+        get_session_date
+        puts 'Please enter the id of the therapist you would like to book an appointment with'
+        book_with_therapist = get_user_input.upcase
+        new_session = Session.new
+        new_session.date = @selected_date
+        new_session.patient_id = @current_user.id
+        new_session.therapist_id = book_with_therapist
+        new_session.completed = false
+        new_session.save
+        puts "Your session has been booked"
+    end
+
+    def chose_a_regular_therapist
+        @my_therapists = @current_user.therapists
+        puts "Here are the therapists you have seen"
+        puts @my_therapists.map{|my_therapist| "ID: #{my_therapist.id}, Name: #{my_therapist.chosen_name}"}.uniq
+        puts "Enter the ID of the therapist you'd like to set as your default"
+        get_default_therapist_id = get_user_input.to_i
+        @default_therapist_id = get_default_therapist_id
+        @default_therapist = find_all_therapists.select{|therapist| therapist.id == @default_therapist_id}
+        puts "Your deafult therapist is #{@default_therapist[0].chosen_name}"
+    end
+
+    def my_therapists
+        @my_therapists = @current_user.therapists
+        @my_therapists.map{|therapist| therapist}.uniq
+    end
+
     def find_therapists
         clear_screen
         puts '*' * 30
@@ -94,8 +162,25 @@ class CLI
 
         case search_choice
         when 'M'
-            puts 'Here are the therapists who have the same identities as you'
-            puts print_therapist_names_matching_identity
+            find_therapists_with_same_intersectional_id
+            if @therapists.length == 0
+                puts "Unfortunately, there are no therapists who have the same intersectional idenitty as you"
+                puts "Would you like to do another search?"
+                puts "Y) Yes"
+                puts "N) No"
+                choice = get_user_input.upcase
+                case choice
+                when 'Y'
+                    find_therapists
+                when 'N'
+                    patient_home
+                else
+                    incorrect_selection
+                end
+            else
+                puts 'Here are the therapists who have the same identities as you'
+                puts print_therapists
+            end
         when 'C'
             do_you_have_a_gender_identity_preference?
             gender_choice = get_user_input.upcase
@@ -167,7 +252,7 @@ class CLI
                         @therapists = find_therapists_in_my_location_who_take_my_insurance.select{|therapist| therapist.race == @race_preference}
                         print_therapists
                     when 'N'
-                        puts print_therapist_names_insurance_and_location
+                        puts print_therapists
                     else
                         incorrect_selection
                     end
@@ -177,10 +262,10 @@ class CLI
             else
                 incorrect_selection
             end
-            book_appointment_or_new_search?
         else
             incorrect_selection
         end
+        book_appointment_or_new_search?
     end
 
     def print_therapists
@@ -203,8 +288,7 @@ class CLI
                     new_session.therapist_id = @therapists[0].id
                     new_session.completed = false
                     new_session.save
-                    puts "Here are your sessions:"
-                    puts get_sessions
+                    puts "Your session has been booked!"
                 else
                     puts 'Enter the id of the therapist you would like to book an appointment with'
                     @selected_id = get_user_input.to_i
@@ -218,9 +302,22 @@ class CLI
                     new_session.therapist_id = selected_therapist[0].id
                     new_session.completed = false
                     new_session.save
-                    puts "Here are your sessions:"
-                    puts get_sessions
+                    puts "Your session has been booked!"
                 end
+                puts 'Go back?'
+                puts 'Y) Yes'
+                puts "\n~~ (Q)uit or (R)estart ~~"
+                choice = get_user_input.upcase
+                case choice
+                when 'Y'
+                    patient_home
+                when 'Q' || "QUIT"
+                when "R" || "RESTART"
+                    run
+                else
+                    incorrect_selection
+                end
+                    
             when 'N'
                 puts 'Would you like to search again?'
                 search_again?
@@ -305,9 +402,14 @@ class CLI
     end
 
     def get_sessions
-        @current_user.sessions
+        @sessions = @current_user.sessions
+        puts @sessions.map{|session| "ID: #{session.id}, Date: #{session.date}, Therapist: #{session.therapist_id}, Completed?: #{session.completed}"}
     end
 
+    def get_completed_sessions
+        @sessions = @current_user.sessions
+        @sessions.select{|session| session.completed == true}
+    end
 
     def find_all_therapists
         Therapist.all
@@ -319,8 +421,7 @@ class CLI
     end
 
     def print_therapist_names_matching_identity
-        therapists = find_therapists_with_same_intersectional_id
-        therapists.map{|therapist| "name: #{therapist.chosen_name}"}
+        @therapists.map{|therapist| "name: #{therapist.chosen_name}"}
     end
 
     def find_therapists_in_my_location_who_take_my_insurance
@@ -328,7 +429,7 @@ class CLI
     end
 
     def find_therapists_with_same_intersectional_id
-        find_therapists_in_my_location_who_take_my_insurance.select{|therapist| therapist.gender_id == @current_user.gender_id and therapist.sexual_id == @current_user.sexual_id and therapist.race == @current_user.race}
+        @therapists = find_therapists_in_my_location_who_take_my_insurance.select{|therapist| therapist.gender_id == @current_user.gender_id and therapist.sexual_id == @current_user.sexual_id and therapist.race == @current_user.race}
     end
 
     def incorrect_selection
