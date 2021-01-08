@@ -164,7 +164,7 @@ class CLI
         when 'M'
             find_therapists_with_same_intersectional_id
             if @therapists.length == 0
-                puts "Unfortunately, there are no therapists who have the same intersectional idenitty as you"
+                puts "Unfortunately, there are no therapists who have the same intersectional identity as you"
                 puts "Would you like to do another search?"
                 puts "Y) Yes"
                 puts "N) No"

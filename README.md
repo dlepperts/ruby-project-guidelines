@@ -1,59 +1,25 @@
-# Module One Final Project Guidelines
-
-Congratulations, you're at the end of module one! You've worked crazy hard to get here and have learned a ton.
-
-For your final project, we'll be building a Command Line database application.
-
-## Project Requirements
-
-### Option One - Data Analytics Project
-
-1. Access a Sqlite3 Database using ActiveRecord.
-2. You should have at minimum three models including one join model. This means you must have a many-to-many relationship.
-3. You should seed your database using data that you collect either from a CSV, a website by scraping, or an API.
-4. Your models should have methods that answer interesting questions about the data. For example, if you've collected info about movie reviews, what is the most popular movie? What movie has the most reviews?
-5. You should provide a CLI to display the return values of your interesting methods.  
-6. Use good OO design patterns. You should have separate classes for your models and CLI interface.
-
-  **Resource:** [Easy Access APIs](https://github.com/learn-co-curriculum/easy-access-apis)
-
-### Option Two - Command Line CRUD App
-
-1. Access a Sqlite3 Database using ActiveRecord.
-2. You should have a minimum of three models.
-3. You should build out a CLI to give your user full CRUD ability for at least one of your resources. For example, build out a command line To-Do list. A user should be able to create a new to-do, see all todos, update a todo item, and delete a todo. Todos can be grouped into categories, so that a to-do has many categories and categories have many to-dos.
-4. Use good OO design patterns. You should have separate classes for your models and CLI interface.
-
-### Brainstorming and Proposing a Project Idea
-
-Projects need to be approved prior to launching into them, so take some time to brainstorm project options that will fulfill the requirements above.  You must have a minimum of four [user stories](https://en.wikipedia.org/wiki/User_story) to help explain how a user will interact with your app.  A user story should follow the general structure of `"As a <role>, I want <goal/desire> so that <benefit>"`. For example, if we were creating an app to randomly choose nearby restaurants on Yelp, we might write:
-
-* As a user, I want to be able to enter my name to retrieve my records
-* As a user, I want to enter a location and be given a random nearby restaurant suggestion
-* As a user, I should be able to reject a suggestion and not see that restaurant suggestion again
-* As a user, I want to be able to save to and retrieve a list of favorite restaurant suggestions
-
-## Instructions
-
-1. Fork and clone this repository.
-2. Build your application. Make sure to commit early and commit often. Commit messages should be meaningful (clearly describe what you're doing in the commit) and accurate (there should be nothing in the commit that doesn't match the description in the commit message). Good rule of thumb is to commit every 3-7 mins of actual coding time. Most of your commits should have under 15 lines of code and a 2 line commit is perfectly acceptable.
-3. Make sure to create a good README.md with a short description, install instructions, a contributor's guide and a link to the license for your code.
-4. Make sure your project checks off each of the above requirements.
-5. Prepare a video demo (narration helps!) describing how a user would interact with your working project.
-    * The video should:
-      - Have an overview of your project. (2 minutes max)
-6. Prepare a presentation to follow your video. (3 minutes max)
-    * Your presentation should:
-      - Describe something you struggled to build, and show us how you ultimately implemented it in your code.
-      - Discuss 3 things you learned in the process of working on this project.
-      - Address what, if anything, you would change or add to what you have today.
-      - Present any code you would like to highlight.   
-7. *OPTIONAL, BUT RECOMMENDED*: Write a blog post about the project and process.
-
----
-### Common Questions:
-- How do I turn off my SQL logger?
-```ruby
-# in config/environment.rb add this line:
-ActiveRecord::Base.logger = nil
-```
+Set Up
+-To start run rake -T in the console to see a list of rake commands. 
+-Since our files and methods require seed data, you will first need to run rake db:migrate this will allow ActiveRecord to update your db/schema.rb file to match the up-to-date structure of the database.
+-You will then need to run rake db:seed to load data from our db/seed.rb file
+-You have now successfully updated the database structure and loaded our data! 
+Overview
+Welcome to the “Therapist Finder” app. This app is tailored to connect LGBTQIA patients with identity affirming therapists within the LGBTQIA community. We understand the importance of safe and inclusive therapy for all, and we strive to give you the best care. 
+Our app starts with entering ruby bin/run.rb to start the program! You will then be prompted through our app system with questions to help narrow your search. This will help you find the best provider for your individual needs. 
+Instructions
+Patients, please follow along!
+1.Enter a username if you are an existing user, create a username if you are new to our site!
+2.With an existing username entered, you are now able to access therapists, manage appointments, change settings, and even see how many sessions you've completed.
+3.Finding a therapist. Our app does the work for you, and has now linked you with therapist in your area who also take your insurance!  
+4.You are now able to narrow your search. You can find a therapist with the exact same identities as you. You are also able to find a therapist based on certain selected identities, which include gender identity, sexual orientation, and race.
+5.Ready to book an appointment? Just choose the therapist from the list provided.
+6.Make sure to set the date of your appointment, by entering it in the format of MM/DD/YYYY
+7.You are now able to view all of your past and future sessions!
+8.Need to manage your appointments? We got you covered!
+9.Head back to the Home Screen to access Manage Your Appointments
+10.If you know your therapist, you are able to book an appointment directly.
+11.You can also view your past and future sessions through Manage Your Appointments
+We hope you were able to successfully find a therapist that fits your needs and identities! The care provided by our service is the upmost importance. Your health and well being is our top priority. Because of our commitment to provided you a safe therapy experience, we have created an anonymous incident report form, that can be accessed on our website at www.therapistfinder.com/incidentreport  
+If you have any questions, concerns, or issues, please contact us at help@therapistfinder.com. 
+***this app requires local gems, use gem list in your terminal to confirm gems listed in Gemfile are installed. To install gems needed, run: gem install name_of_the_gem_needed.
+This project is licensed under the terms of the [Flatiron Educational Content License] (http://learn.co/content-license) (http://learn.co/content-license).
